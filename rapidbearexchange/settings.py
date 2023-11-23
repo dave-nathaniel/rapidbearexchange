@@ -44,12 +44,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'service_core',
-
     'rest_framework',
     'rest_framework_simplejwt',
-
     'corsheaders',
+    'django_countries',
+
+    'service_core',
+    'service_wallet',
+    'service_markets',
+    'service_transaction',
+    'service_verification',
 ]
 
 REST_FRAMEWORK = {

@@ -9,7 +9,7 @@ class APIResponse(Response):
         if data is not None:
             response_data['data'] = data
 
-        if status == 200:
+        if status in range(200, 299):
             response_data["status"] = "success"
         else:
             response_data["status"] = "failed"

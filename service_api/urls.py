@@ -4,7 +4,7 @@ from .views import UserRegistrationAPIView, CustomTokenObtainPairView, UserUpdat
 
 urlpatterns = [
     # Add other URL patterns
-    path('register', UserRegistrationAPIView.as_view(), name='user-registration'),
-    path('authenticate', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('users/<int:pk>/update', UserUpdateAPIView.as_view(), name='user-update'),
+    path('user/register', UserRegistrationAPIView.as_view(), name='user-registration'),
+    path('user/authenticate', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('user/<int:pk>/update', UserUpdateAPIView.as_view(), name='user-update'),
 ]
