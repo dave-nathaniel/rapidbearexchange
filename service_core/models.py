@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django_countries.fields import CountryField
+# from django_countries import countries
 
 
 
@@ -64,17 +65,18 @@ class CustomUser(AbstractUser):
 		return f"{self.first_name} {self.last_name}"
 
 
-
 class UserProfile(models.Model):
-	user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+	user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
 	photo = models.FileField(upload_to='user_images/', null=True, blank=True)
-	country = CountryField()
+	country = CountryField(default='NG')
 	identity_verified = models.BooleanField(default=False)
 	
 	@property
 	def ref_code(self):
 		return self.username
 
+	def __str__(self):
+		return f"{self.user.first_name} {self.user.last_name}'s Profile"
 
 
 class ExternalAssetAccount(models.Model):

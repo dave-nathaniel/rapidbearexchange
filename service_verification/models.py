@@ -16,7 +16,6 @@ def get_sentinel_user():
 	return CustomUser.objects.filter(is_superuser=True).order_by('id').first()
 
 
-
 class Verification(models.Model):
 	user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
 	status = models.SmallIntegerField(
@@ -45,7 +44,6 @@ class ID_Verification(Verification):
 	
 	def __str__(self):
 		return f"{self.user.username} - {self.status}"
-
 
 
 class BVN_Verification(Verification):
