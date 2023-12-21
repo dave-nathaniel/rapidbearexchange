@@ -22,6 +22,7 @@ CustomUser = get_user_model()
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
+
 	serializer_class = CustomTokenObtainPairSerializer
 
 	def post(self, request, *args, **kwargs):
@@ -47,7 +48,6 @@ class UserProfileAPIView(APIView):
 			return APIResponse(f'{e}', status.HTTP_400_BAD_REQUEST)
 
 	def get(self, request):
-
 		self.permission_classes = [IsAuthenticated]
 
 		user = CustomUser.objects.get(id=request.user.id)
@@ -57,7 +57,6 @@ class UserProfileAPIView(APIView):
 		return APIResponse('User profile retreived successfully', status.HTTP_200_OK,serializer.data)
 
 	def put(self, request):
-
 		self.permission_classes = [IsAuthenticated]
 
 		user = CustomUser.objects.get(id=request.user.id)
@@ -86,3 +85,5 @@ class UserWalletAPIView(APIView):
 		serializer = WalletSerializer(user_wallet)
 
 		return APIResponse('User wallet retreived successfully.', status.HTTP_200_OK, data=serializer.data)
+
+

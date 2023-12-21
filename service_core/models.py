@@ -47,7 +47,6 @@ class CustomUserManager(UserManager):
 		return user
 
 
-
 class CustomUser(AbstractUser):
 	first_name = models.CharField(max_length=150)
 	last_name = models.CharField(max_length=150)
@@ -69,14 +68,37 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
 	photo = models.FileField(upload_to='user_images/', null=True, blank=True)
 	country = CountryField(default='NG')
-	identity_verified = models.BooleanField(default=False)
 	
 	@property
 	def ref_code(self):
-		return self.username
+		return f"rb{self.user.username}"
+
+	@property
+	def profile_verification(self):
+		has_done_bvn_verification = hasattr(self.user, "bvn_verification")
+		has_done_id_verification = hasattr(self.user, "id_verification")
+
+		verification_obj = {
+			"bvn": self.user.bvn_verification.id_number if has_done_bvn_verification else None,
+			"bvn_verification_status": self.user.bvn_verification.get_status_display() if has_done_bvn_verification else None,
+			"id_verification_status": self.user.id_verification.get_status_display() if has_done_id_verification else None
+		}
+
+		return verification_obj
 
 	def __str__(self):
 		return f"{self.user.first_name} {self.user.last_name}'s Profile"
+
+
+class UserAccountControl(models.Model):
+	DEFAULT_TRANSACTION_LIMITS = {
+		"in": 0,
+		"out": 10000,
+	}
+	user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='account_control')
+	transaction_limits = models.JSONField(default=lambda: DEFAULT_TRANSACTION_LIMITS)
+	inflow_restricted = models.BooleanField(default=True)
+	outflow_restricted = models.BooleanField(default=True)
 
 
 class ExternalAssetAccount(models.Model):
@@ -88,7 +110,8 @@ class ExternalAssetAccount(models.Model):
 	'''
 	ASSET_TYPE_CHOICES = [
 		('fiat', 'Fiat'), #FIAT asset accounts like Bank Accounts.
-		('digital', 'Digital'), #Digitat asset accounts like crypto wallet.
+		('digital', 'Digital'), #Digital asset accounts like crypto wallet.
+		('deposit', 'Deposit'), #An account strictly for depositing into this user's wallet.
 		#('Real', 'Real') "Real" assets include assets like Gold, etc, we currently don't have need for those.
 	]
 

@@ -10,9 +10,19 @@ CustomUser = get_user_model()
 
 
 class UserProfileSerializer(CountryFieldMixin, serializers.ModelSerializer):
+	ref_code = serializers.SerializerMethodField()
+	verification = serializers.SerializerMethodField()
+
+	def get_ref_code(self, obj):
+		return obj.ref_code
+
+	def get_verification(self, obj):
+		return obj.profile_verification
+
 	class Meta:
 		model = UserProfile
-		fields = "__all__"
+		exclude = ["id", "user"]
+		# fields = "__all__"
 
 
 class UserSerializer(serializers.ModelSerializer):
